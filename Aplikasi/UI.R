@@ -2,6 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(plotly)
 library(DT)
+library(GA)
 #library(ggplot2)
 #library(readxl)
 
@@ -12,11 +13,12 @@ shinyUI(
       sidebarMenu(
         menuItem("Dashboard", tabName = "dashboard1", icon=icon("dashboard")),
         menuSubItem("Menampilkan Data", tabName = "mentahan", icon=icon("file-excel")),
-        menuSubItem("Menampilkan Chart", tabName = "hasil", icon=icon("chart-pie")),
-        menuItem("Regresi Berganda", tabName = "rlb", icon=icon("edit")),
+        #menuSubItem("Menampilkan Chart", tabName = "hasil", icon=icon("chart-pie")),
+        menuItem("Regresi Linier Berganda", tabName = "rlb", icon=icon("edit")),
+        menuItem("Algoritma Genetika", tabName = "ag", icon=icon("edit"))
         
-        sliderInput("bins",
-                    "Number of bins:", min=1, max=50, value=20)
+        #sliderInput("bins",
+         #           "Number of bins:", min=1, max=50, value=20)
       )),
     dashboardBody(
       tabItems(
@@ -67,17 +69,45 @@ shinyUI(
         tabItem(tabName = "rlb",
                 sidebarPanel(
                   selectInput("vardep", label = h3("Variabel Dependen"),
-                              choices = list("pendapatan" = "pendapatan", 'jumlah_pelanggan' = 'jumlah_pelanggan', 'jumlah_produk' = 'jumlah_produk')),
-                  selectInput("varindep", label = h3("Variabel Independen"),
-                              choices = list("jumlah_pelanggan"="jumlah_pelanggan", "jumlah_produk"="jumlah_produk",'pendapatan'='pendatan'))
+                              choices = list("pendapatan (Y)" = "pendapatan", 'Jumlah Pelanggan (X1)' = 'jumlahPelanggan', 'Jumlah Produk (X2)' = 'jumlahProduk')),
+                  selectInput("varindep1", label = h3("Variabel Independen"),
+                              choices = list("Jumlah Produk (X2)" = "jumlahProduk", "Jumlah Pelanggan (X1)" = "jumlahPelanggan",'Pendapatan (Y)' = 'pendapatan'))
+                  #selectInput("varindep2", label = h3("Variabel Independen"),
+                              #choices = list("Jumlah Pelanggan (X1)" = "jumlah_pelanggan", "Jumlah Pelanggan (X2)" = "jumlah_produk",'Pendapatan (Y)' = 'pendapatan'))
                 ),
                 mainPanel(
                   tabsetPanel(type = "tabs",
                               tabPanel("Scatterplot", plotOutput("scatterplot")),
                               tabPanel("Ringkasan Model", verbatimTextOutput("summary")),#output regresi
                               tabPanel("Data", DT::dataTableOutput('dataset4')))
+                ),
+                sidebarPanel(
+                    textInput("satu", "Masukan Nilai X1"),
+                    textInput("dua", "Masukan Nilai X2"),
+                      actionButton("hitung", "Proses")
+                ),
+                mainPanel(
+                  tags$h3('Hasil :'),
+                  verbatimTextOutput("less"),
+                  
+                  tags$h3('Standard Error Estimate :'),
+                  verbatimTextOutput("cross")
                 )
-            )
+                
+            ),
+        
+        #Page 5
+        tabItem(tabName = "ag",
+                sidebarPanel(
+                  selectInput("popuSize", label = h3("Jumlah Populasi"),
+                              choices = list(10,20,30,40,50)),
+                ),
+                mainPanel(
+                  tabsetPanel(type = "tabs",
+                              tabPanel("Ringkasan Model", verbatimTextOutput("model"))),
+                  
+                      )
+                )
       )
     )
   )

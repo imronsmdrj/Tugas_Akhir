@@ -6,6 +6,7 @@ library(gganimate)
 library(dplyr)
 library(plotly)
 library(hrbrthemes)
+library(GA)
 
 #use the below code options if you wish to increase the file input limit
 #options(shiny.maxRequestSize = 9*1024^2)
@@ -95,31 +96,62 @@ shinyServer(function(input,output,session){
     model <- lm(pendapatan ~ jumlah_pelanggan + jumlah_produk, dataset)
     spend_value <- predict(model, dataset)
     spend_value
-    bins <- seq(min(dataset), max(dataset), length.out = input$bins)
+    #bins <- seq(min(dataset), max(dataset), length.out = input$bins)
   })
   
   
   #Page 4
   #Output Regresi
   output$summary <- renderPrint({
-    fit <- lm(dataset[,input$vardep] ~ dataset[,input$varindep])
-    names(fit$coefficients) <- c("Intercept", 'var_independen')
-    summary(fit)
+    model <- lm(pendapatan ~ jumlah_pelanggan + jumlah_produk, dataset)
+    spend_value <- predict(model, dataset)
+    spend_value
+    summary(model)
   })
   
   #Output Data
   output$dataset4 = DT::renderDataTable({
-    DT::datatable(dataset, options = list(lengthChange = FALSE))
+    DT::datatable(lihat, options = list(lengthChange = FALSE))
   })
   
   #Output Scatterplot
   output$scatterplot <- renderPlot({
-    plot(dataset[,input$varindep], dataset[,input$vardep], main="Scatterplot",
-         xlab=input$varindep, ylab=input$vardep, pch=19)
+    plot(lihat[,input$varindep1], lihat[,input$vardep], main="Scatter Plot",
+         xlab=input$varindep1, ylab=input$vardep, pch=10)
     
-    abline(lm(dataset[,input$vardep] ~ dataset[,input$varindep]), col="red")
+    abline(lm(lihat[,input$vardep] ~ lihat[,input$varindep1]), col="red")
     
-    lines(lowess(dataset[,input$varindep], dataset[,input$vardep]), col="blue")
+    lines(lowess(lihat[,input$varindep1], lihat[,input$vardep]), col="blue")
   }, height = 400)
   
+  
+  observeEvent(input$hitung,{
+    z <- as.numeric(input$satu)
+    a <- as.numeric(input$dua)
+    
+    #reactive expression
+    k <- 38698.09 + 9.01*z + 14438.94*a
+    w <- (6159719058547 - (38698.09 * 18869533) - (9.01 * 361134531073) - (14438.94 * 147592846))/60-3
+    
+    output$less <- renderPrint(k)
+    output$cross <- renderPrint(w)
+  })
+  
+  
+  #Page 5
+  output$model <- renderPrint({
+    Rastrigin <- function(x1, x2)
+    {
+      y = 38698.09 + x1*9.01 + x2*14438.94
+    }
+    
+    x1 <- x2 <- seq(-2, 2, by = 0.5)
+    
+    f <- outer(x1, x2, Rastrigin)
+    
+    GA <- ga(type = "real-valued", pcrossover = 0.8, fitness = function(x) -Rastrigin(x[1], x[2]),
+             lower = c(-1, -1), upper = c(5.12, 5.12),
+             seed = 123, elitism = 10, popSize = 15, maxiter = 15, run = 30)
+    summary(GA)
+  })
 })
