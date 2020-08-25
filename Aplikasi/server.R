@@ -131,10 +131,20 @@ shinyServer(function(input,output,session){
     
     #reactive expression
     k <- 38698.09 + 9.01*z + 14438.94*a
-    w <- (6159719058547 - (38698.09 * 18869533) - (9.01 * 361134531073) - (14438.94 * 147592846))/60-3
     
     output$less <- renderPrint(k)
-    output$cross <- renderPrint(w)
+  
+  })
+    
+  observeEvent(input$proses,{
+    b <- as.numeric(input$hasilY)
+    c <- as.numeric(input$y)
+    
+    #reactive expression
+    d <- b - c
+    
+    output$error <- renderPrint(d)
+    
   })
   
   
@@ -145,13 +155,14 @@ shinyServer(function(input,output,session){
       y = 38698.09 + x1*9.01 + x2*14438.94
     }
     
-    x1 <- x2 <- seq(-2, 2, by = 0.5)
+    x1 <- x2 <- seq(-5, 5, by = 0.1)
     
     f <- outer(x1, x2, Rastrigin)
     
-    GA <- ga(type = "real-valued", pcrossover = 0.8, fitness = function(x) -Rastrigin(x[1], x[2]),
-             lower = c(-1, -1), upper = c(5.12, 5.12),
-             seed = 123, elitism = 10, popSize = 15, maxiter = 15, run = 30)
+    GA <- ga(type = "real-valued", pcrossover = 0.1, fitness = function(x) -Rastrigin(x[1], x[2]),
+             lower = c(18, 20), upper = c(20, 21),
+             seed = 123, elitism = 30, popSize = 50, maxiter = 100, run = 30)
+    
     summary(GA)
   })
 })

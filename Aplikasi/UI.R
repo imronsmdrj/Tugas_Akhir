@@ -7,7 +7,7 @@ library(GA)
 #library(readxl)
 
 shinyUI(
-  dashboardPage(
+  dashboardPage(skin = "yellow",
     dashboardHeader(title = "Optimasi Nilai Pendapatan"),
     dashboardSidebar(
       sidebarMenu(
@@ -67,6 +67,8 @@ shinyUI(
         
         #Page 4
         tabItem(tabName = "rlb",
+                #First row
+                fluidRow(
                 sidebarPanel(
                   selectInput("vardep", label = h3("Variabel Dependen"),
                               choices = list("pendapatan (Y)" = "pendapatan", 'Jumlah Pelanggan (X1)' = 'jumlahPelanggan', 'Jumlah Produk (X2)' = 'jumlahProduk')),
@@ -81,34 +83,41 @@ shinyUI(
                               tabPanel("Ringkasan Model", verbatimTextOutput("summary")),#output regresi
                               tabPanel("Data", DT::dataTableOutput('dataset4')))
                 ),
-                sidebarPanel(
+                
+                box(
+                sidebarPanel(width = 250,
                     textInput("satu", "Masukan Nilai X1"),
                     textInput("dua", "Masukan Nilai X2"),
                       actionButton("hitung", "Proses")
                 ),
                 mainPanel(
                   tags$h3('Hasil :'),
-                  verbatimTextOutput("less"),
-                  
-                  tags$h3('Standard Error Estimate :'),
-                  verbatimTextOutput("cross")
-                )
+                  verbatimTextOutput("less")
+                )),
                 
-            ),
+                box(
+                sidebarPanel(width = 250,
+                  textInput("hasilY", "Masukan Nilai Hasil"),
+                  textInput("y", "Masukan Nilai Pendapatan"),
+                    actionButton("proses", "Hitung")
+                ),
+                
+                mainPanel(
+                  tags$h3("Hasil Error :"),
+                  verbatimTextOutput("error")
+                ))
+                
+            )),
         
         #Page 5
         tabItem(tabName = "ag",
-                sidebarPanel(
-                  selectInput("popuSize", label = h3("Jumlah Populasi"),
-                              choices = list(10,20,30,40,50)),
-                ),
+                fluidRow(
                 mainPanel(
                   tabsetPanel(type = "tabs",
                               tabPanel("Ringkasan Model", verbatimTextOutput("model"))),
                   
-                      )
-                )
+                      ))
+                ))
       )
     )
   )
-)
