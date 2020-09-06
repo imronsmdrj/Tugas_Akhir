@@ -2,7 +2,7 @@ library(ggplot2) #library untuk menampilkan chart
 
 head(dataset) #untuk menampilkan 5 data teratas
 
-pairs(dataset[1:3]) #untuk apa ini
+pairs(dataset[1:3]) #untuk melihat korelasi antar variabel
 
 cor(dataset) #untuk melihat keterhubungan antara variabel dependen dengan variabel independen dilihat dari bentuk nilai diagonalnya
 

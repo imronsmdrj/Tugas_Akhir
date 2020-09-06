@@ -3,8 +3,7 @@ library(shinydashboard)
 library(plotly)
 library(DT)
 library(GA)
-#library(ggplot2)
-#library(readxl)
+library(ggplot2)
 
 shinyUI(
   dashboardPage(skin = "yellow",
@@ -30,12 +29,14 @@ shinyUI(
                          infoBoxOutput("max_", width = 3),
                          infoBoxOutput("sd_", width = 3),
                          infoBoxOutput("mean_", width = 3)),
-               #secnd row
-               fluidRow(box(title = "Box with a plot",plotOutput("plot1", height = 500)),
-                        box(title = "Box with a plot", plotOutput("plot2", height = 500))),
+               #first row
+               fluidRow(box(width = 12, title = "Jumlah Produk",
+                            plotOutput("plot1", height = 500))),
+               #second row
+               fluidRow(box(width = 12, title = "Jumlah Pelanggan", plotOutput("plot2", height = 500))),
                
                #third row
-               fluidRow(box(title = "Plot Pendapatan", plotOutput("plot3", height = 500))),
+               fluidRow(box(width = 12, title = "Plot Pendapatan", plotOutput("plot3", height = 500))),
         ),
                
         
@@ -65,7 +66,7 @@ shinyUI(
                   #box(title = "Histogram Jumlah Pelanggan", status = "primary", solidHeader = T, tableOutput("dataset3"))
                 ),
         
-        #Page 4
+        #Page 3
         tabItem(tabName = "rlb",
                 #First row
                 fluidRow(

@@ -79,17 +79,6 @@ shinyServer(function(input,output,session){
   output$table <- renderDT(data())
   
   #Page 3
-  output$dataset1 <- renderPlot({
-    ggplot(dataset, aes(x=pendapatan)) + geom_histogram(colour = "blue")
-    #bins <- seq(min(dataset), max(dataset), length.out = input$bins)
-  })
-  
-  output$dataset2 <- renderPlot({
-    ggplot(dataset, aes(x=jumlah_pelanggan, y=jumlah_produk)) + geom_area(fill="#69b3a2", alpha=0.5) +
-      geom_line(color="#69b3a2") + ylab("Jumlah Pelanggan") +
-      xlab("Jumlah Produk") + theme_ipsum()
-  })
-  
   output$dataset3 <- renderTable({
     head(dataset)
     pairs(dataset[1:3])
@@ -160,7 +149,7 @@ shinyServer(function(input,output,session){
     f <- outer(x1, x2, Rastrigin)
     
     GA <- ga(type = "real-valued", pcrossover = 0.1, fitness = function(x) -Rastrigin(x[1], x[2]),
-             lower = c(18, 20), upper = c(20, 21),
+             lower = c(15, 17), upper = c(17, 18),
              seed = 123, elitism = 30, popSize = 50, maxiter = 100, run = 30)
     
     summary(GA)
